@@ -25,6 +25,8 @@ const Anecdote = ({anecdote, handleClick}) =>
     padding: 5
   }
 
+  console.log('Anecdote: ', anecdote)
+
   return (
     <div style={style}>
         <div key={anecdote.id}>
