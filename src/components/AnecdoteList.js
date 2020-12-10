@@ -1,21 +1,11 @@
 import React from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import {connect} from 'react-redux'
 import {addVote} from '../reducers/anecdoteReducer'
 import Anecdote from './Anecdote'
 
-const AnecdoteList = () =>
+const AnecdoteList = (props) =>
 {
-    const dispatch = useDispatch()
-    //const anecdotes = useSelector(state => state.anecdotes)
-    const anecdotes = useSelector(({filter, anecdotes}) =>
-    {
-        if(filter === ''){
-            return anecdotes
-        }       
-        return anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
-    })
-
-    anecdotes.sort(compareNumbers)
+    props.anecdotes.sort(compareNumbers)
 
     function compareNumbers(a, b)
     {
@@ -25,15 +15,35 @@ const AnecdoteList = () =>
 
     return (
         <div>
-            {anecdotes.map(anecdote =>
+            {props.anecdotes.map(anecdote =>
                 <Anecdote
                     key={anecdote.id}
                     anecdote={anecdote}
-                    handleClick={() => dispatch(addVote(anecdote.id))}
+                    handleClick={() => props.addVote(anecdote.id)}
                 />
             )}
         </div>
     )
 }
 
-export default AnecdoteList
+const mapStateToProps = (state) =>
+{
+    if (state.filter === '')
+    {
+        return {anecdotes: state.anecdotes}
+    }
+    return {
+        anecdotes: state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
+    }
+}
+
+const mapDispatchToProps = {
+    addVote
+}
+
+const ConnectedAnecdotes = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AnecdoteList)
+
+export default ConnectedAnecdotes
