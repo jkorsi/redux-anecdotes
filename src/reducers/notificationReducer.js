@@ -1,32 +1,42 @@
+import {setTiming, getTiming} from '../Timing'
+
 const initialState = 'Welcome to Anecdotes'
 
 const NotificationReducer = (state = initialState, action) =>
 {
   switch (action.type)
   {
-    case 'ADD_NOTIFICATION':
-      return `Added '${action.data}'`
-    case 'VOTE_NOTIFICATION':
-      return `Voted '${action.data}'`
+    case 'SHOW_NOTIFICATION':
+      return action.data
     case 'HIDE':
       return ''
     default: return state
   }
 }
 
-export const showAddMessage = (message) =>
+export const showMessage = (message) =>
 {
   return {
-    type: 'ADD_NOTIFICATION',
+    type: 'SHOW_NOTIFICATION',
     data:  message
   }
 }
 
-export const showVoteMessage = (message) =>
+export const showAndHideMessage = (message, timer) =>
 {
-  return {
-    type: 'VOTE_NOTIFICATION',
-    data: message
+  return async dispatch =>
+  {
+    clearTimeout(getTiming())
+    dispatch({
+      type: 'SHOW_NOTIFICATION',
+      data: message
+    })
+    setTiming(setTimeout(() => 
+    {
+        dispatch({
+          type: 'HIDE'
+        })
+      }, timer*1000))
   }
 }
 

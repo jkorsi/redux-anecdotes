@@ -1,31 +1,20 @@
 import React from 'react'
-
 import {useDispatch} from 'react-redux'
-import {showVoteMessage, hideMessage} from '../reducers/notificationReducer'
-
-import { setTiming, getTiming } from './Timing'
+import {showAndHideMessage} from '../reducers/notificationReducer'
 
 const Anecdote = ({anecdote, handleClick}) =>
 {
   const dispatch = useDispatch()
 
-  function vote(message, clickHandler)
+  function vote(votedContent, clickHandler)
   {
-    dispatch(showVoteMessage(message))
-
-    clearTimeout(getTiming())
-    setTiming(setTimeout(() =>
-    {
-      dispatch(hideMessage())
-    }, 5000)) 
+    dispatch(showAndHideMessage(`Voted: ${votedContent}`, 2))
     clickHandler()
   }
 
   const style = {
     padding: 5
   }
-
-  console.log('Anecdote: ', anecdote)
 
   return (
     <div style={style}>
